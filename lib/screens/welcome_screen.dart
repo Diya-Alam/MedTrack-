@@ -1,5 +1,27 @@
-import 'package:flutter/material.dart';
-import 'package:medtrack_app/screens/welcome_screen.dart';
+import 'package:flutter/material.dart'
+    show
+        BorderRadius,
+        BorderSide,
+        BuildContext,
+        Color,
+        Colors,
+        Column,
+        EdgeInsets,
+        ElevatedButton,
+        Image,
+        MainAxisAlignment,
+        Navigator,
+        OutlinedButton,
+        Padding,
+        RoundedRectangleBorder,
+        SafeArea,
+        Scaffold,
+        SizedBox,
+        StatelessWidget,
+        Text,
+        TextAlign,
+        TextStyle,
+        Widget;
 
 class WelcomeScreen extends StatelessWidget {
   const WelcomeScreen({super.key});
