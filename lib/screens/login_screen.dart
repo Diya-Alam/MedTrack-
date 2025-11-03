@@ -30,11 +30,8 @@ class _LoginScreenState extends State<LoginScreen> {
   void _handleLogin() {
     if (_formKey.currentState!.validate()) {
       // Form is valid, perform login logic
-      final email = _emailController.text;
-      final password = _passwordController.text;
-
       // TODO: Replace this placeholder with your actual authentication logic (e.g., Firebase Auth)
-      print('Attempting login with Email: $email and Password: $password');
+      // Use _emailController.text and _passwordController.text directly where needed
 
       // Placeholder navigation to a home screen after successful login
       // Navigator.of(context).pushReplacementNamed(AppRoutes.home);

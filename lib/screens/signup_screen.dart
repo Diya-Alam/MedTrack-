@@ -71,6 +71,7 @@ class SignupScreen extends StatelessWidget {
               ElevatedButton(
                 onPressed: () {
                   // TODO: Implement actual signup logic (e.g., validation, API call)
+                  // ignore: avoid_print
                   print('Signup button pressed!');
                 },
                 style: ElevatedButton.styleFrom(
