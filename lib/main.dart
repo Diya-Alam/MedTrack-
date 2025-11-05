@@ -7,6 +7,7 @@ import 'package:flutter/material.dart'
         runApp,
         ThemeData,
         Colors;
+
 // Importing the AppRoutes definition
 import 'package:medtrack_app/routes.dart';
 
@@ -23,13 +24,12 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'MedTrack+',
       theme: ThemeData(primarySwatch: Colors.blue, useMaterial3: true),
-      // Set the initial route to the Pill Reminder screen for immediate testing
-      initialRoute: AppRoutes.pillReminder,
+
+      // THIS MUST BE SET TO THE WELCOME ROUTE:
+      initialRoute: AppRoutes.welcome,
+
       // Link the external routes map
       routes: AppRoutes.routes,
     );
   }
 }
-
-// NOTE: The screen definitions (WelcomeScreen, LoginScreen, SignupScreen) are
-// now expected to be in their own files and imported via routes.dart.

@@ -9,14 +9,15 @@ class WelcomeScreen extends StatelessWidget {
 
   // Action for the 'Get Started' button
   void _onGetStartedPressed(BuildContext context) {
-    // Navigate to the Signup Screen
-    Navigator.of(context).pushNamed(AppRoutes.signup);
+    // Navigate directly to the Pill Reminder Screen in Guest Mode,
+    // using pushReplacementNamed to prevent going back to Welcome.
+    Navigator.of(context).pushReplacementNamed(AppRoutes.guestMode);
   }
 
-  // Action for the Login button
-  void _onLoginPressed(BuildContext context) {
-    // Navigate to the Login Screen
-    Navigator.of(context).pushNamed(AppRoutes.login);
+  // Action for the 'Sign Up' button
+  void _onSignupPressed(BuildContext context) {
+    // Navigate to the Signup Screen
+    Navigator.of(context).pushNamed(AppRoutes.signup);
   }
 
   @override
@@ -35,18 +36,14 @@ class WelcomeScreen extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: <Widget>[
-                // Image/Logo placeholder (use your asset path)
-                // Image.asset(
-                //   'assets/welcome_illustration.png',
-                //   height: isMobile ? 200 : 300,
-                // ),
-
-                // Placeholder Icon
-                Icon(
-                  Icons.favorite_border,
-                  size: isMobile ? 120 : 180,
-                  color: primaryColor,
+                // 1. Image of the heart-shaped path
+                Image.asset(
+                  'assets/welcome_illustration.png', // <-- Updated to use the image asset
+                  height: isMobile ? 200 : 300,
+                  // If the image fails to load, it will show nothing or a tiny error icon.
                 ),
+
+                // REMOVE THE PLACEHOLDER ICON: Icon(Icons.favorite_border, ...)
                 const SizedBox(height: 40),
 
                 // Main Title
@@ -60,8 +57,6 @@ class WelcomeScreen extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 16),
-
-                // Subtitle/Description
                 const Text(
                   'Manage your medications and health schedule with ease and precision. Never miss a dose again!',
                   textAlign: TextAlign.center,
@@ -70,9 +65,10 @@ class WelcomeScreen extends StatelessWidget {
 
                 const SizedBox(height: 60),
 
-                // Get Started Button
+                // 2. Get Started Button (Now leads to Guest Mode)
                 ElevatedButton(
-                  onPressed: () => _onGetStartedPressed(context),
+                  onPressed: () =>
+                      _onGetStartedPressed(context), // <-- New action
                   style: ElevatedButton.styleFrom(
                     foregroundColor: Colors.white,
                     backgroundColor: primaryColor,
@@ -85,14 +81,16 @@ class WelcomeScreen extends StatelessWidget {
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  child: const Text('Get Started (Sign Up)'),
+                  child: const Text(
+                    'Get Started (Skip Login)',
+                  ), // <-- Updated label
                 ),
 
                 const SizedBox(height: 16),
 
-                // Login Button
+                // 3. Sign Up Button (Replaces old Login Button)
                 OutlinedButton(
-                  onPressed: () => _onLoginPressed(context),
+                  onPressed: () => _onSignupPressed(context), // <-- New action
                   style: OutlinedButton.styleFrom(
                     foregroundColor: primaryColor,
                     side: BorderSide(color: primaryColor, width: 2),
@@ -105,7 +103,9 @@ class WelcomeScreen extends StatelessWidget {
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  child: const Text('Login'),
+                  child: const Text(
+                    'Create an Account (Sign Up)',
+                  ), // <-- New label
                 ),
               ],
             ),

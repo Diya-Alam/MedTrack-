@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:medtrack_app/routes.dart';
 
 class SignupScreen extends StatelessWidget {
   const SignupScreen({super.key});
@@ -97,7 +98,7 @@ class SignupScreen extends StatelessWidget {
                 onPressed: () {
                   // Navigate to the Login Screen
                   // Replace '/login' with your actual login route constant
-                  Navigator.of(context).pushReplacementNamed('/login');
+                  Navigator.of(context).pushReplacementNamed(AppRoutes.login);
                 },
                 child: const Text('Already have an account? Login here.'),
               ),
