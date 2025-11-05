@@ -4,105 +4,106 @@ import 'package:medtrack_app/routes.dart';
 class SignupScreen extends StatelessWidget {
   const SignupScreen({super.key});
 
+  // Placeholder function for signup logic
+  void _handleSignup(BuildContext context) {
+    // In a real application, this is where you would call Firebase Auth:
+    // 1. Validate form fields
+    // 2. Call createUserWithEmailAndPassword
+    // 3. Handle success or failure
+
+    // --- SIMULATION: Navigate to the full, authenticated app experience ---
+    // Using pushReplacementNamed so the user can't hit 'back' to the signup screen
+    Navigator.of(context).pushReplacementNamed(AppRoutes.pillReminder);
+  }
+
   @override
   Widget build(BuildContext context) {
-    // We use a Scaffold to provide the basic page structure
     return Scaffold(
       appBar: AppBar(
         title: const Text('Create Account'),
-        backgroundColor: Colors.blueGrey, // Example styling
+        backgroundColor: Theme.of(context).primaryColor,
+        foregroundColor: Colors.white,
       ),
       body: Center(
-        // Use SingleChildScrollView to prevent overflow when the keyboard appears
         child: SingleChildScrollView(
-          padding: const EdgeInsets.all(24.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: <Widget>[
-              // --- Header Text ---
-              const Text(
-                'Welcome Aboard!',
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: 28,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.blueGrey,
-                ),
-              ),
-              const SizedBox(height: 30),
-
-              // --- Email Field ---
-              TextFormField(
-                keyboardType: TextInputType.emailAddress,
-                decoration: const InputDecoration(
-                  labelText: 'Email Address',
-                  hintText: 'e.g., user@example.com',
-                  border: OutlineInputBorder(),
-                  prefixIcon: Icon(Icons.email),
-                ),
-              ),
-              const SizedBox(height: 15),
-
-              // --- Password Field ---
-              TextFormField(
-                obscureText: true, // Hides the input
-                decoration: const InputDecoration(
-                  labelText: 'Password',
-                  hintText: 'Enter your password',
-                  border: OutlineInputBorder(),
-                  prefixIcon: Icon(Icons.lock),
-                ),
-              ),
-              const SizedBox(height: 15),
-
-              // --- Confirm Password Field ---
-              TextFormField(
-                obscureText: true,
-                decoration: const InputDecoration(
-                  labelText: 'Confirm Password',
-                  hintText: 'Re-enter your password',
-                  border: OutlineInputBorder(),
-                  prefixIcon: Icon(Icons.check_circle),
-                ),
-              ),
-              const SizedBox(height: 30),
-
-              // --- Signup Button ---
-              ElevatedButton(
-                onPressed: () {
-                  // TODO: Implement actual signup logic (e.g., validation, API call)
-                  // ignore: avoid_print
-                  print('Signup button pressed!');
-                },
-                style: ElevatedButton.styleFrom(
-                  minimumSize: const Size(
-                    double.infinity,
-                    50,
-                  ), // Make button wide
-                  backgroundColor: Colors.teal,
-                  padding: const EdgeInsets.symmetric(vertical: 15),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8.0),
+          padding: const EdgeInsets.all(32.0),
+          child: Card(
+            elevation: 8,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(16),
+            ),
+            child: Padding(
+              padding: const EdgeInsets.all(24.0),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Text(
+                    'Get Started Today',
+                    style: Theme.of(context).textTheme.headlineLarge?.copyWith(
+                      fontWeight: FontWeight.bold,
+                      color: Theme.of(context).primaryColorDark,
+                    ),
+                    textAlign: TextAlign.center,
                   ),
-                ),
-                child: const Text(
-                  'SIGN UP',
-                  style: TextStyle(fontSize: 18, color: Colors.white),
-                ),
+                  const SizedBox(height: 20),
+                  const TextField(
+                    decoration: InputDecoration(
+                      labelText: 'Full Name',
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(8)),
+                      ),
+                      prefixIcon: Icon(Icons.person),
+                    ),
+                  ),
+                  const SizedBox(height: 15),
+                  const TextField(
+                    decoration: InputDecoration(
+                      labelText: 'Email',
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(8)),
+                      ),
+                      prefixIcon: Icon(Icons.email),
+                    ),
+                    keyboardType: TextInputType.emailAddress,
+                  ),
+                  const SizedBox(height: 15),
+                  const TextField(
+                    decoration: InputDecoration(
+                      labelText: 'Password',
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(8)),
+                      ),
+                      prefixIcon: Icon(Icons.lock),
+                    ),
+                    obscureText: true,
+                  ),
+                  const SizedBox(height: 30),
+                  ElevatedButton(
+                    onPressed: () => _handleSignup(context),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Theme.of(context).primaryColor,
+                      foregroundColor: Colors.white,
+                      padding: const EdgeInsets.symmetric(vertical: 15),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                    ),
+                    child: const Text(
+                      'Sign Up',
+                      style: TextStyle(fontSize: 18),
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+                  TextButton(
+                    onPressed: () {
+                      Navigator.of(context).pushNamed(AppRoutes.login);
+                    },
+                    child: const Text("Already have an account? Login"),
+                  ),
+                ],
               ),
-              const SizedBox(height: 20),
-
-              // --- Link to Login Screen ---
-              TextButton(
-                onPressed: () {
-                  // Navigate to the Login Screen
-                  // Replace '/login' with your actual login route constant
-                  Navigator.of(context).pushReplacementNamed(AppRoutes.login);
-                },
-                child: const Text('Already have an account? Login here.'),
-              ),
-            ],
+            ),
           ),
         ),
       ),
