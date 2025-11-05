@@ -7,6 +7,10 @@ import 'screens/pill reminder screen.dart';
 import 'screens/login_screen.dart';
 import 'screens/signup_screen.dart';
 import 'screens/health_monitor_screen.dart';
+// NEW IMPORT: The Main App Shell
+// ignore: unused_import
+import '../widgets/main_app_shell.dart';
+
 // This file defines the constant strings for routing names and the
 // map of routes used by the MaterialApp in main.dart.
 
