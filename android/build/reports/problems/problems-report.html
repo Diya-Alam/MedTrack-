@@ -131,6 +131,7 @@ button, select {
 }
 
 [type=reset], [type=submit], button, html [type=button] {
+    appearance: button;
     -webkit-appearance: button
 }
 
@@ -175,6 +176,7 @@ textarea {
 }
 
 [type=search] {
+    appearance: textfield;
     -webkit-appearance: textfield;
     outline-offset: -2px
 }
@@ -661,3 +663,28 @@ function configurationCacheProblems() { return (
 
 </body>
 </html>
+// android/build.gradle
+
+// ... (buildscript block is fine)
+
+allprojects {
+    repositories {
+        // ENSURE these two lines are present:
+        google() 
+        mavenCentral()
+    }
+}
+
+// ...subprojects {
+    // ... (other configurations)
+
+    // ENSURE this block is present to configure Kotlin for all subprojects
+    afterEvaluate { project ->
+        if (project.plugins.hasPlugin("org.jetbrains.kotlin.android") ||
+            project.plugins.hasPlugin("org.jetbrains.kotlin.jvm")) {
+            project.extensions.configure(org.jetbrains.kotlin.gradle.dsl.KotlinProjectExtension::class.java) {
+                jvmToolchain(11)
+            }
+        }
+    }
+}

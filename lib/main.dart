@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart'
     show
         BuildContext,
-        Center,
         MaterialApp,
-        Scaffold,
         StatelessWidget,
-        Text,
         Widget,
-        runApp;
-// ignore: implementation_imports
-import 'package:flutter/src/widgets/framework.dart';
+        runApp,
+        ThemeData,
+        Colors;
+
+// Importing the AppRoutes definition
+import 'package:medtrack_app/routes.dart';
 
 void main() {
   runApp(const MyApp());
@@ -22,29 +22,14 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      initialRoute: '/',
-      routes: <String, WidgetBuilder>{
-        '/': (context) => const WelcomeScreen(),
-        '/login': (context) => const LoginScreen(), // if you have one
-      },
+      title: 'MedTrack+',
+      theme: ThemeData(primarySwatch: Colors.blue, useMaterial3: true),
+
+      // THIS MUST BE SET TO THE WELCOME ROUTE:
+      initialRoute: AppRoutes.welcome,
+
+      // Link the external routes map
+      routes: AppRoutes.routes,
     );
-  }
-}
-
-class LoginScreen extends StatelessWidget {
-  const LoginScreen({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return const Scaffold(body: Center(child: Text('Login Screen')));
-  }
-}
-
-class WelcomeScreen extends StatelessWidget {
-  const WelcomeScreen({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return const Scaffold(body: Center(child: Text('Welcome Screen')));
   }
 }
