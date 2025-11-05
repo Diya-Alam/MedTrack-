@@ -1,7 +1,7 @@
 // ignore_for_file: deprecated_member_use
 
 import 'package:flutter/material.dart';
-import '../routes.dart';
+import 'package:medtrack_app/routes.dart';
 
 // Feature 1: The Welcome Screen UI/UX.
 class WelcomeScreen extends StatelessWidget {
@@ -9,16 +9,14 @@ class WelcomeScreen extends StatelessWidget {
 
   // Action for the 'Get Started' button
   void _onGetStartedPressed(BuildContext context) {
-    // Navigates to the signup route
-    Navigator.pushNamed(context, AppRoutes.signup);
+    // Navigate to the Signup Screen
+    Navigator.of(context).pushNamed(AppRoutes.signup);
   }
 
-  // Placeholder for the Login button logic (required by your README)
+  // Action for the Login button
   void _onLoginPressed(BuildContext context) {
-    // This will be updated to navigate to AppRoutes.login once the LoginScreen is implemented
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Login screen not implemented yet.')),
-    );
+    // Navigate to the Login Screen
+    Navigator.of(context).pushNamed(AppRoutes.login);
   }
 
   @override
@@ -37,88 +35,42 @@ class WelcomeScreen extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: <Widget>[
-                // --- Image Asset Placeholder ---
-                const SizedBox(height: 20),
-                Container(
-                  padding: const EdgeInsets.all(20),
-                  decoration: BoxDecoration(
-                    color: primaryColor.withOpacity(0.03),
-                    borderRadius: BorderRadius.circular(20),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.grey.withOpacity(0.1),
-                        blurRadius: 10,
-                        offset: const Offset(0, 5),
-                      ),
-                    ],
-                  ),
-                  child: SizedBox(
-                    height: isMobile ? 250 : 350,
-                    child: Image.asset(
-                      'assets/welcome_illustration.png', // <--- Your specified asset path
-                      fit: BoxFit
-                          .contain, // Ensures the image fits within the box
-                      errorBuilder: (context, error, stackTrace) {
-                        // Fallback placeholder if the image path is incorrect or file is missing
-                        return Container(
-                          decoration: BoxDecoration(
-                            color: primaryColor.withOpacity(0.05),
-                            borderRadius: BorderRadius.circular(15),
-                            border: Border.all(
-                              color: primaryColor.withOpacity(0.2),
-                              width: 2,
-                            ),
-                          ),
-                          alignment: Alignment.center,
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Icon(
-                                Icons.image_not_supported_outlined,
-                                size: 50,
-                                color: primaryColor,
-                              ),
-                              const SizedBox(height: 10),
-                              const Text(
-                                'Illustration Not Found (Check assets/welcome_illustration.png)',
-                                style: TextStyle(
-                                  color: Colors.red,
-                                  fontSize: 14,
-                                ),
-                              ),
-                            ],
-                          ),
-                        );
-                      },
-                    ),
-                  ),
+                // Image/Logo placeholder (use your asset path)
+                // Image.asset(
+                //   'assets/welcome_illustration.png',
+                //   height: isMobile ? 200 : 300,
+                // ),
+
+                // Placeholder Icon
+                Icon(
+                  Icons.favorite_border,
+                  size: isMobile ? 120 : 180,
+                  color: primaryColor,
                 ),
+                const SizedBox(height: 40),
 
-                SizedBox(height: isMobile ? 40 : 60),
-
-                // --- Motivational Tagline ---
+                // Main Title
                 Text(
-                  'Your Health, Our Priority.',
+                  'Welcome to MediTrack+',
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     fontSize: isMobile ? 32 : 48,
-                    fontWeight: FontWeight.w900,
-                    color: primaryColor,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black87,
                   ),
                 ),
-
                 const SizedBox(height: 16),
 
-                // Sub-tagline
+                // Subtitle/Description
                 const Text(
-                  'Never miss a dose. Stay organized, informed, and on track with MediTrack+.',
+                  'Manage your medications and health schedule with ease and precision. Never miss a dose again!',
                   textAlign: TextAlign.center,
-                  style: TextStyle(fontSize: 18, color: Colors.grey),
+                  style: TextStyle(fontSize: 18, color: Colors.black54),
                 ),
 
-                SizedBox(height: isMobile ? 50 : 80),
+                const SizedBox(height: 60),
 
-                // --- Get Started Button (Navigates to Sign Up) ---
+                // Get Started Button
                 ElevatedButton(
                   onPressed: () => _onGetStartedPressed(context),
                   style: ElevatedButton.styleFrom(
@@ -133,7 +85,7 @@ class WelcomeScreen extends StatelessWidget {
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  child: const Text('Get Started'),
+                  child: const Text('Get Started (Sign Up)'),
                 ),
 
                 const SizedBox(height: 16),
