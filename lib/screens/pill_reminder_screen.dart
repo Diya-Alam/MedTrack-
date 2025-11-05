@@ -3,10 +3,11 @@ import 'package:flutter/material.dart';
 // --- Pill Reminder Data Model ---
 class PillReminder {
   final String medicationName;
-  final String schedule; // e.g., 'Daily', 'Twice a week'
+  final String schedule; // e.g., 'Daily', 'Weekly', 'Monthly', 'As Needed'
   final TimeOfDay time;
   final DateTime startDate;
-  final int repeatDays; // e.g., 0 for daily, 7 for weekly (simplified in form)
+  final int
+  repeatDays; // e.g., 0 for daily, 7 for weekly (reserved for future use)
   final int durationDays; // Duration of the course in days
 
   PillReminder({
@@ -23,7 +24,6 @@ class PillReminder {
 class PillReminderScreen extends StatefulWidget {
   final bool isGuest;
 
-  // Constructor requires 'isGuest' flag from routes.dart
   const PillReminderScreen({super.key, required this.isGuest});
 
   @override
@@ -31,43 +31,33 @@ class PillReminderScreen extends StatefulWidget {
 }
 
 class _PillReminderScreenState extends State<PillReminderScreen> {
-  // List to hold all user reminders (starts empty)
   final List<PillReminder> _reminders = [];
 
-  // --- Functions for user actions (Point 3) ---
-
   void _markAsTaken(PillReminder reminder) {
-    // Logic for marking pill as taken (e.g., logging it, updating status)
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(content: Text('${reminder.medicationName} marked as taken!')),
     );
   }
 
   void _skipReminder(PillReminder reminder) {
-    // Logic for skipping the pill (e.g., recording the skip)
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(content: Text('${reminder.medicationName} skipped.')),
     );
   }
 
   void _rescheduleReminder(PillReminder reminder) {
-    // Logic for rescheduling (e.g., opening a time picker)
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(content: Text('${reminder.medicationName} rescheduled.')),
     );
   }
 
-  // --- Function to add a new reminder (Updated for Sliders/Pickers) ---
-
   void _showAddReminderSheet() {
-    // Local State Variables for the Form (reset on each open)
     String selectedSchedule = 'Daily';
     double durationInDays = 7;
     DateTime selectedDate = DateTime.now();
     TimeOfDay selectedTime = TimeOfDay.now();
-    TextEditingController nameController = TextEditingController();
+    final TextEditingController nameController = TextEditingController();
 
-    // Add Calendar to add date
     Future<void> selectDate(
       BuildContext context,
       StateSetter setModalState,
@@ -85,7 +75,6 @@ class _PillReminderScreenState extends State<PillReminderScreen> {
       }
     }
 
-    // Add Clock to add time
     Future<void> selectTime(
       BuildContext context,
       StateSetter setModalState,
@@ -105,11 +94,9 @@ class _PillReminderScreenState extends State<PillReminderScreen> {
       context: context,
       isScrollControlled: true,
       builder: (ctx) {
-        // Use StateSetter for local state changes inside the BottomSheet
         return StatefulBuilder(
           builder: (BuildContext context, StateSetter setModalState) {
-            // Schedule options list (moved inside builder for scope)
-            List<String> scheduleOptions = [
+            final List<String> scheduleOptions = [
               'Daily',
               'Weekly',
               'Monthly',
@@ -160,12 +147,14 @@ class _PillReminderScreenState extends State<PillReminderScreen> {
                         child: DropdownButton<String>(
                           value: selectedSchedule,
                           isExpanded: true,
-                          items: scheduleOptions.map((String value) {
-                            return DropdownMenuItem<String>(
-                              value: value,
-                              child: Text(value),
-                            );
-                          }).toList(),
+                          items: scheduleOptions
+                              .map(
+                                (String value) => DropdownMenuItem<String>(
+                                  value: value,
+                                  child: Text(value),
+                                ),
+                              )
+                              .toList(),
                           onChanged: (String? newValue) {
                             if (newValue != null) {
                               setModalState(() {
@@ -178,7 +167,7 @@ class _PillReminderScreenState extends State<PillReminderScreen> {
                     ),
                     const SizedBox(height: 20),
 
-                    // Date Picker (Calendar)
+                    // Date Picker
                     Row(
                       children: [
                         Expanded(
@@ -196,7 +185,7 @@ class _PillReminderScreenState extends State<PillReminderScreen> {
                     ),
                     const SizedBox(height: 10),
 
-                    // Time Picker (Clock)
+                    // Time Picker
                     Row(
                       children: [
                         Expanded(
@@ -225,7 +214,7 @@ class _PillReminderScreenState extends State<PillReminderScreen> {
                     Slider(
                       value: durationInDays,
                       min: 1,
-                      max: 90, // Max 90 days for example
+                      max: 90,
                       divisions: 89,
                       label: durationInDays.round().toString(),
                       onChanged: (double value) {
@@ -241,7 +230,6 @@ class _PillReminderScreenState extends State<PillReminderScreen> {
                       onPressed: () {
                         if (nameController.text.isNotEmpty) {
                           Navigator.of(ctx).pop();
-                          // Update the main screen state
                           setState(() {
                             _reminders.add(
                               PillReminder(
@@ -253,9 +241,9 @@ class _PillReminderScreenState extends State<PillReminderScreen> {
                                 durationDays: durationInDays.toInt(),
                               ),
                             );
-                            nameController.dispose();
                           });
                         }
+                        nameController.dispose();
                       },
                       style: ElevatedButton.styleFrom(
                         padding: const EdgeInsets.symmetric(vertical: 15),
@@ -272,18 +260,15 @@ class _PillReminderScreenState extends State<PillReminderScreen> {
     );
   }
 
-  // --- Main Build Method ---
-
   @override
   Widget build(BuildContext context) {
+    final Color primary = Theme.of(context).primaryColor;
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.isGuest ? 'Pill Reminder (Guest)' : 'Pill Reminder'),
-        backgroundColor: Theme.of(context).primaryColor,
+        backgroundColor: primary,
         foregroundColor: Colors.white,
       ),
-
-      // Point 1: Content based on reminder list state
       body: _reminders.isEmpty
           ? Center(
               child: Column(
@@ -292,11 +277,13 @@ class _PillReminderScreenState extends State<PillReminderScreen> {
                   Icon(
                     Icons.access_time_filled,
                     size: 80,
-                    color: Theme.of(context).primaryColor.withOpacity(0.6),
+                    // If your SDK warns on withOpacity, switch to withValues
+                    // ignore: deprecated_member_use
+                    color: primary.withValues(alpha: 0.6),
                   ),
                   const SizedBox(height: 20),
                   const Text(
-                    "Start to add your reminder", // Point 1: Text in the middle
+                    "Start to add your reminder",
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       fontSize: 24,
@@ -314,7 +301,6 @@ class _PillReminderScreenState extends State<PillReminderScreen> {
               ),
             )
           : ListView.builder(
-              // Point 2: List of added reminders
               itemCount: _reminders.length,
               itemBuilder: (context, index) {
                 final reminder = _reminders[index];
@@ -329,18 +315,16 @@ class _PillReminderScreenState extends State<PillReminderScreen> {
                 );
               },
             ),
-
-      // Point 1: Add button on the side
       floatingActionButton: FloatingActionButton(
         onPressed: _showAddReminderSheet,
-        backgroundColor: Theme.of(context).primaryColor,
+        backgroundColor: primary,
         child: const Icon(Icons.add, color: Colors.white),
       ),
     );
   }
 }
 
-// --- Widget to display a single reminder (Point 2 & 3) ---
+// --- Widget to display a single reminder ---
 class ReminderCard extends StatelessWidget {
   final PillReminder reminder;
   final Function(PillReminder) onTaken;
@@ -357,6 +341,7 @@ class ReminderCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final Color primary = Theme.of(context).primaryColor;
     return Card(
       elevation: 4,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
@@ -402,7 +387,7 @@ class ReminderCard extends StatelessWidget {
 
             const Divider(height: 20),
 
-            // Point 3: Action Buttons
+            // Action Buttons
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
@@ -418,13 +403,11 @@ class ReminderCard extends StatelessWidget {
                 const SizedBox(width: 8),
                 ElevatedButton(
                   onPressed: () => onTaken(reminder),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Theme.of(context).primaryColor,
-                  ),
+                  style: ElevatedButton.styleFrom(backgroundColor: primary),
                   child: const Text(
                     'NOW',
                     style: TextStyle(color: Colors.white),
-                  ), // Check reminder by clicking NOW
+                  ),
                 ),
               ],
             ),

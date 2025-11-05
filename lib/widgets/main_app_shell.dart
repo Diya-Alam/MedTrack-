@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 // Import the core feature screens
 import '../screens/health_monitor_screen.dart';
-import '../screens/pill reminder screen.dart';
+import 'package:medtrack_app/screens/pill_reminder_screen.dart';
 
 class MainAppShell extends StatefulWidget {
   final bool isGuest;

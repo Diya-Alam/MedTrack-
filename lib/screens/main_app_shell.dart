@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:medtrack_app/screens/pill_reminder_screen.dart';
 
 // Import the core feature screens (Note: using the file names established in our conversation)
-import 'pill reminder screen.dart';
+import 'pill_reminder_screen.dart';
 import 'health_monitor_screen.dart';
 //import 'timer_screen.dart';
 
