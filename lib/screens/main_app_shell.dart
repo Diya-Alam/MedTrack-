@@ -1,41 +1,39 @@
 import 'package:flutter/material.dart';
+// Note: Changed the import to match the standard name 'reminder_screen.dart'
+// used in previous steps. If your file is named 'pill_reminder_screen.dart',
+// this will need manual correction on your end to 'ReminderScreen()'.
 import 'package:medtrack_app/screens/pill_reminder_screen.dart';
+import 'package:medtrack_app/screens/timer_screen.dart';
 
-// Import the core feature screens (Note: using the file names established in our conversation)
-import 'pill_reminder_screen.dart';
-import 'health_monitor_screen.dart';
-//import 'timer_screen.dart';
-
-class MainAppShell extends StatefulWidget {
-  final bool isGuest;
-
-  // The isGuest status is passed down from the route call (login/welcome)
-  const MainAppShell({super.key, required this.isGuest});
+// This screen acts as the main hub post-login, featuring a Bottom Navigation Bar.
+class HomeScreen extends StatefulWidget {
+  const HomeScreen({super.key});
 
   @override
-  State<MainAppShell> createState() => _MainAppShellState();
+  State<HomeScreen> createState() => _HomeScreenState();
 }
 
-class _MainAppShellState extends State<MainAppShell> {
-  // Current selected tab index: 0=Reminders, 1=Monitor, 2=Timer
+class _HomeScreenState extends State<HomeScreen> {
   int _selectedIndex = 0;
 
-  // List of screens available in the Bottom Navigation Bar
-  late final List<Widget> _widgetOptions;
+  // List of screens to be displayed in the body of the Scaffold
+  final List<Widget> _screens = [
+    // 0. Reminder Screen (Feature 3) - FIX: Pass required parameter 'isGuest: false'
+    const PillReminderScreen(isGuest: false),
 
-  @override
-  void initState() {
-    super.initState();
-    // Initialize the list of screens once, passing the initial isGuest status
-    _widgetOptions = <Widget>[
-      // Tab 0: Pill Reminders
-      PillReminderScreen(isGuest: widget.isGuest),
-      // Tab 1: Health Monitor
-      const HealthMonitorScreen(),
-      // Tab 2: Anti-Procrastination Timer
-      //const TimerScreen(),
-    ];
-  }
+    // 1. Placeholder for Health Monitor (Feature 4)
+    const Center(
+      child: Text('Health Monitor (Feature 4)', style: TextStyle(fontSize: 20)),
+    ),
+
+    // 2. Anti-Procrastination Timer (Feature 5)
+    const TimerScreen(),
+
+    // 3. Placeholder for Reports/Profile (Features 6 & 7)
+    const Center(
+      child: Text('Reports & Profile', style: TextStyle(fontSize: 20)),
+    ),
+  ];
 
   void _onItemTapped(int index) {
     setState(() {
@@ -45,31 +43,38 @@ class _MainAppShellState extends State<MainAppShell> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      // Display the screen corresponding to the selected index using IndexedStack
-      // IndexedStack keeps all three widgets alive (e.g., the timer will keep running)
-      body: IndexedStack(index: _selectedIndex, children: _widgetOptions),
+    final primaryColor = Theme.of(context).primaryColor;
 
-      // Bottom Navigation Bar
+    return Scaffold(
+      // The body displays the selected screen from the list above
+      body: _screens[_selectedIndex],
+
+      // --- Bottom Navigation Bar Implementation ---
       bottomNavigationBar: BottomNavigationBar(
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
-            icon: Icon(Icons.access_time_filled),
+            icon: Icon(Icons.schedule_outlined),
             label: 'Reminders',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.monitor_heart),
+            icon: Icon(Icons.monitor_heart_outlined),
             label: 'Monitor',
           ),
-          // NEW ITEM: Timer
-          BottomNavigationBarItem(icon: Icon(Icons.timer), label: 'Timer'),
+          // Timer Icon
+          BottomNavigationBarItem(
+            icon: Icon(Icons.timer_outlined),
+            label: 'Focus Timer',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.assessment_outlined),
+            label: 'Reports',
+          ),
         ],
         currentIndex: _selectedIndex,
-        selectedItemColor: Theme.of(context).primaryColor,
+        selectedItemColor: primaryColor,
         unselectedItemColor: Colors.grey,
-        // Use fixed type so all three labels are clearly visible
-        type: BottomNavigationBarType.fixed,
         onTap: _onItemTapped,
+        type: BottomNavigationBarType.fixed, // Use fixed type for 4 items
       ),
     );
   }

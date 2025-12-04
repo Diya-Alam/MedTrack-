@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 
 // Import all necessary screens and the shell widget
-
 import 'package:medtrack_app/screens/welcome_screen.dart';
+import 'package:medtrack_app/widgets/main_app_shell.dart';
 import 'screens/login_screen.dart';
 import 'screens/signup_screen.dart';
 import 'screens/health_monitor_screen.dart';
-import 'screens/main_app_shell.dart';
+//import 'screens/main_app_shell.dart';
+import 'screens/timer_screen.dart'; // <-- Added import for TimerScreen
 
 // This file defines the constant strings for routing names and the
 // map of routes used by the MaterialApp in main.dart.
@@ -23,6 +24,7 @@ class AppRoutes {
   static const String guestMode = '/guest_pill_reminder'; // Guest User Home
 
   static const String healthMonitor = '/health_monitor';
+  static const String focusTimer = '/focus_timer'; // <-- Added route constant
 
   // --- Centralized Route Map ---
   static Map<String, WidgetBuilder> get routes => {
@@ -33,6 +35,9 @@ class AppRoutes {
 
     // Health Monitor Screen (Direct map, mainly for testing/deep links)
     healthMonitor: (context) => const HealthMonitorScreen(),
+
+    // Focus Timer Screen (Direct map for deep links/testing)
+    focusTimer: (context) => const TimerScreen(), // <-- Added route mapping
 
     pillReminder: (context) => const MainAppShell(isGuest: false),
 
