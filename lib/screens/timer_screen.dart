@@ -17,7 +17,7 @@ class _TimerScreenState extends State<TimerScreen> {
   bool _isRunning = false;
 
   // Saved Timer State
-  Map<String, Duration> _savedTimers = {
+  final Map<String, Duration> _savedTimers = {
     'Default Focus': const Duration(minutes: 30),
     'Deep Work': const Duration(minutes: 60),
     'Quick Task': const Duration(minutes: 15),
