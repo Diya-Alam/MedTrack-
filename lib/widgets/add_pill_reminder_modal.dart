@@ -65,6 +65,7 @@ class _AddPillReminderModalState extends State<AddPillReminderModal> {
 
   void _submitForm() {
     if (_formKey.currentState!.validate()) {
+      var id = '';
       final newReminder = PillReminder(
         medicationName: _medicationNameController.text.trim(),
         schedule: _selectedSchedule,
@@ -72,6 +73,7 @@ class _AddPillReminderModalState extends State<AddPillReminderModal> {
         startDate: _startDate,
         repeatDays: 0, // Placeholder
         durationDays: _durationDays.round(),
+        id: id,
       );
 
       // Pass the new item back to the parent screen

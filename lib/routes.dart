@@ -9,11 +9,12 @@ import 'screens/login_screen.dart';
 import 'screens/signup_screen.dart';
 import 'screens/health_monitor_screen.dart';
 import 'screens/timer_screen.dart';
-import 'screens/scheduling_screen.dart'; // Keep the new screen
-import 'package:medtrack_app/screens/pill_reminder_screen.dart'; // NEW IMPORT for standalone access
+import 'screens/scheduling_screen.dart';
+// NEW: Reports Screen Import
+import 'screens/medication_report_screen.dart';
 
 class AppRoutes {
-  // --- Route Name Constants ---
+  // --- Route Name Constants ---\r\n
   static const String welcome = '/';
   static const String signup = '/signup';
   static const String login = '/login';
@@ -23,12 +24,13 @@ class AppRoutes {
       '/pill_reminder'; // Authenticated User Home
   static const String guestMode = '/guest_pill_reminder'; // Guest User Home
 
+  // Direct Screen Mappings (for testing/deep links)
+  static const String medicationReports = '/medication_reports'; // NEW ROUTE
   static const String healthMonitor = '/health_monitor';
   static const String focusTimer = '/focus_timer';
-  // Feature 6 (Reports) route constant is now permanently removed.
   static const String scheduling = '/scheduling';
 
-  // --- Centralized Route Map ---
+  // --- Centralized Route Map ---\r\n
   static Map<String, WidgetBuilder> get routes => {
     // Mapping the route names to the actual screen widgets
     welcome: (context) => const WelcomeScreen(),
@@ -36,14 +38,14 @@ class AppRoutes {
     login: (context) => const LoginScreen(),
 
     // Direct Screen Mappings (for testing/deep links)
+    medicationReports: (context) =>
+        const MedicationReportScreen(isGuest: false), // NEW MAPPING
     healthMonitor: (context) => const HealthMonitorScreen(),
     focusTimer: (context) => const TimerScreen(),
-    // Feature 6 (Reports) route mapping is now permanently removed.
     scheduling: (context) => const SchedulingScreen(),
 
     // Main Shell Wrappers (Home)
     pillReminder: (context) => const MainAppShell(isGuest: false),
-    // CHANGE: Guest Mode now goes directly to PillReminderScreen without the Shell
-    guestMode: (context) => const PillReminderScreen(isGuest: true),
+    guestMode: (context) => const MainAppShell(isGuest: true),
   };
 }
