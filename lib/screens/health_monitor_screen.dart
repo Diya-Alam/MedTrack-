@@ -143,8 +143,9 @@ class _HealthMonitorScreenState extends State<HealthMonitorScreen> {
 
   // Gets the last 7 numeric trend values for the graph
   List<double> _getTrendData(String metricName) {
-    if (metricName == 'Blood Pressure')
+    if (metricName == 'Blood Pressure') {
       return []; // BP is complex string, skip for simple graph
+    }
 
     return _allRecordsHistory.values
         .expand((list) => list)
@@ -347,27 +348,25 @@ class _HealthMonitorScreenState extends State<HealthMonitorScreen> {
               if (records.isEmpty)
                 const Center(child: Text('No records found for this day.')),
 
-              ...records
-                  .map(
-                    (record) => ListTile(
-                      leading: Icon(_metricIcons[record.metricName]),
-                      title: Text(
-                        '${record.metricName} - ${record.value} ${_metricUnits[record.metricName] ?? ''}',
-                      ),
-                      subtitle: Text(
-                        'Logged at ${DateFormat('hh:mm a').format(record.timestamp)}',
-                      ),
-                      trailing: const Icon(Icons.edit),
-                      onTap: () {
-                        Navigator.of(ctx).pop(); // Close the list modal
-                        _showRecordForm(
-                          metricToLog: record.metricName,
-                          recordToEdit: record,
-                        );
-                      },
-                    ),
-                  )
-                  .toList(),
+              ...records.map(
+                (record) => ListTile(
+                  leading: Icon(_metricIcons[record.metricName]),
+                  title: Text(
+                    '${record.metricName} - ${record.value} ${_metricUnits[record.metricName] ?? ''}',
+                  ),
+                  subtitle: Text(
+                    'Logged at ${DateFormat('hh:mm a').format(record.timestamp)}',
+                  ),
+                  trailing: const Icon(Icons.edit),
+                  onTap: () {
+                    Navigator.of(ctx).pop(); // Close the list modal
+                    _showRecordForm(
+                      metricToLog: record.metricName,
+                      recordToEdit: record,
+                    );
+                  },
+                ),
+              ),
             ],
           ),
         );
@@ -403,9 +402,9 @@ class _HealthMonitorScreenState extends State<HealthMonitorScreen> {
     final isAvailable = record != null;
 
     Color graphColor;
-    if (metricName == 'Weight')
+    if (metricName == 'Weight') {
       graphColor = Colors.blue;
-    else if (metricName == 'Blood Pressure')
+    } else if (metricName == 'Blood Pressure')
       graphColor = Colors.red;
     else if (metricName == 'Glucose')
       graphColor = Colors.orange;
@@ -570,7 +569,7 @@ class _HealthMonitorScreenState extends State<HealthMonitorScreen> {
             // --- Metric Trend Section (Now shows a single, selected trend) ---
             const SizedBox(height: 30),
             Text(
-              '${_selectedTrendMetric} Trend (Last 7 Records)',
+              '$_selectedTrendMetric Trend (Last 7 Records)',
               style: Theme.of(context).textTheme.headlineSmall,
             ),
             const SizedBox(height: 15),

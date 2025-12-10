@@ -1,3 +1,5 @@
+// lib/screens/login_screen.dart
+
 import 'package:flutter/material.dart';
 import 'package:medtrack_app/routes.dart';
 
@@ -12,6 +14,16 @@ class LoginScreen extends StatelessWidget {
     // 3. Handle success or failure
 
     // --- SIMULATION: Navigate to the full, authenticated app experience ---
+    Navigator.of(context).pushReplacementNamed(AppRoutes.pillReminder);
+  }
+
+  // NEW: Placeholder function for social login logic
+  void _handleSocialLogin(BuildContext context, String provider) {
+    // In a real application, this would call a social sign-in method
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('Simulating login with $provider...')),
+    );
+    // Simulate successful navigation
     Navigator.of(context).pushReplacementNamed(AppRoutes.pillReminder);
   }
 
@@ -39,35 +51,36 @@ class LoginScreen extends StatelessWidget {
                 children: [
                   Text(
                     'Welcome Back',
-                    style: Theme.of(context).textTheme.headlineLarge?.copyWith(
+                    style: Theme.of(context).textTheme.headlineMedium?.copyWith(
                       fontWeight: FontWeight.bold,
-                      color: Theme.of(context).primaryColorDark,
                     ),
-                    textAlign: TextAlign.center,
                   ),
-                  const SizedBox(height: 20),
-                  const TextField(
-                    decoration: InputDecoration(
+                  const SizedBox(height: 25),
+
+                  // Email Input
+                  TextFormField(
+                    keyboardType: TextInputType.emailAddress,
+                    decoration: const InputDecoration(
                       labelText: 'Email',
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(8)),
-                      ),
+                      border: OutlineInputBorder(),
                       prefixIcon: Icon(Icons.email),
                     ),
-                    keyboardType: TextInputType.emailAddress,
                   ),
                   const SizedBox(height: 15),
-                  const TextField(
-                    decoration: InputDecoration(
-                      labelText: 'Password',
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(8)),
-                      ),
-                      prefixIcon: Icon(Icons.lock),
-                    ),
+
+                  // Password Input
+                  TextFormField(
                     obscureText: true,
+                    decoration: const InputDecoration(
+                      labelText: 'Password',
+                      border: OutlineInputBorder(),
+                      prefixIcon: Icon(Icons.lock),
+                      // IMPROVEMENT: Add a toggle icon here in a real app
+                    ),
                   ),
                   const SizedBox(height: 5),
+
+                  // Forgot Password?
                   Align(
                     alignment: Alignment.centerRight,
                     child: TextButton(
@@ -78,6 +91,8 @@ class LoginScreen extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: 20),
+
+                  // Standard Login Button
                   ElevatedButton(
                     onPressed: () => _handleLogin(context),
                     style: ElevatedButton.styleFrom(
@@ -90,7 +105,45 @@ class LoginScreen extends StatelessWidget {
                     ),
                     child: const Text('Login', style: TextStyle(fontSize: 18)),
                   ),
+
+                  // NEW: Divider for Social Login
+                  const SizedBox(height: 30),
+                  Row(
+                    children: [
+                      const Expanded(child: Divider()),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                        child: Text(
+                          'OR',
+                          style: TextStyle(color: Colors.grey[600]),
+                        ),
+                      ),
+                      const Expanded(child: Divider()),
+                    ],
+                  ),
+                  const SizedBox(height: 30),
+
+                  // NEW: Social Login Button (Simulated Google Sign-in)
+                  OutlinedButton.icon(
+                    onPressed: () => _handleSocialLogin(context, 'Google'),
+                    icon: const Icon(
+                      Icons.g_mobiledata,
+                      size: 30,
+                    ), // Placeholder icon
+                    label: const Text('Sign in with Google'),
+                    style: OutlinedButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(vertical: 15),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      side: BorderSide(color: Colors.grey.shade300, width: 1.5),
+                    ),
+                  ),
+
+                  // End of New Section
                   const SizedBox(height: 20),
+
+                  // Link to Sign Up Screen
                   TextButton(
                     onPressed: () {
                       Navigator.of(context).pushNamed(AppRoutes.signup);

@@ -1,4 +1,7 @@
+// lib/screens/pill_reminder_screen.dart
+
 import 'package:flutter/material.dart';
+import '../widgets/add_pill_reminder_modal.dart'; // NEW IMPORT
 
 // --- Pill Reminder Data Model ---
 class PillReminder {
@@ -31,12 +34,55 @@ class PillReminderScreen extends StatefulWidget {
 }
 
 class _PillReminderScreenState extends State<PillReminderScreen> {
-  final List<PillReminder> _reminders = [];
+  // Use a unique key for the list view to handle state updates cleanly
+  final GlobalKey<AnimatedListState> _listKey = GlobalKey<AnimatedListState>();
 
+  // Use a List instead of final to allow adding/removing items
+  List<PillReminder> _reminders = [];
+
+  @override
+  void initState() {
+    super.initState();
+    // Initialize with mock data if not a guest
+    if (!widget.isGuest) {
+      _reminders.addAll(_mockReminders);
+    }
+  }
+
+  // --- Mock Data ---
+  final List<PillReminder> _mockReminders = [
+    PillReminder(
+      medicationName: 'Daily Vitamin',
+      schedule: 'Daily',
+      time: const TimeOfDay(hour: 8, minute: 0),
+      startDate: DateTime.now().subtract(const Duration(days: 5)),
+      repeatDays: 0,
+      durationDays: 30,
+    ),
+    PillReminder(
+      medicationName: 'Blood Pressure Med',
+      schedule: 'Daily',
+      time: const TimeOfDay(hour: 17, minute: 30),
+      startDate: DateTime.now().subtract(const Duration(days: 1)),
+      repeatDays: 0,
+      durationDays: 90,
+    ),
+    PillReminder(
+      medicationName: 'Joint Pain Relief',
+      schedule: 'As Needed',
+      time: const TimeOfDay(hour: 12, minute: 0),
+      startDate: DateTime.now(),
+      repeatDays: 0,
+      durationDays: 7,
+    ),
+  ];
+
+  // --- Action Handlers ---
   void _markAsTaken(PillReminder reminder) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(content: Text('${reminder.medicationName} marked as taken!')),
     );
+    // In a real app, this would log the action and remove the item from the 'due' list.
   }
 
   void _skipReminder(PillReminder reminder) {
@@ -51,287 +97,137 @@ class _PillReminderScreenState extends State<PillReminderScreen> {
     );
   }
 
-  void _showAddReminderSheet() {
-    String selectedSchedule = 'Daily';
-    double durationInDays = 7;
-    DateTime selectedDate = DateTime.now();
-    TimeOfDay selectedTime = TimeOfDay.now();
-    final TextEditingController nameController = TextEditingController();
+  // NEW: Add a new reminder to the list
+  void _addReminder(PillReminder newReminder) {
+    setState(() {
+      _reminders.insert(0, newReminder); // Add to the top
+    });
+    // In a real app, you would add to a database first.
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(
+          '${newReminder.medicationName} reminder added successfully!',
+        ),
+      ),
+    );
+  }
 
-    Future<void> selectDate(
-      BuildContext context,
-      StateSetter setModalState,
-    ) async {
-      final DateTime? picked = await showDatePicker(
-        context: context,
-        initialDate: selectedDate,
-        firstDate: DateTime.now(),
-        lastDate: DateTime(2101),
-      );
-      if (picked != null && picked != selectedDate) {
-        setModalState(() {
-          selectedDate = picked;
-        });
-      }
-    }
-
-    Future<void> selectTime(
-      BuildContext context,
-      StateSetter setModalState,
-    ) async {
-      final TimeOfDay? picked = await showTimePicker(
-        context: context,
-        initialTime: selectedTime,
-      );
-      if (picked != null && picked != selectedTime) {
-        setModalState(() {
-          selectedTime = picked;
-        });
-      }
-    }
-
+  // NEW: Function to display the Add Reminder Modal
+  void _showAddReminderModal(BuildContext context) {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
-      builder: (ctx) {
-        return StatefulBuilder(
-          builder: (BuildContext context, StateSetter setModalState) {
-            final List<String> scheduleOptions = [
-              'Daily',
-              'Weekly',
-              'Monthly',
-              'As Needed',
-            ];
-
-            return SingleChildScrollView(
-              child: Padding(
-                padding: EdgeInsets.fromLTRB(
-                  20,
-                  20,
-                  20,
-                  MediaQuery.of(context).viewInsets.bottom + 20,
-                ),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    Text(
-                      'New Pill Reminder Setup',
-                      style: Theme.of(context).textTheme.headlineSmall,
-                      textAlign: TextAlign.center,
-                    ),
-                    const Divider(),
-                    const SizedBox(height: 20),
-
-                    // Medication Name
-                    TextField(
-                      controller: nameController,
-                      decoration: const InputDecoration(
-                        labelText: 'Medication Name',
-                        border: OutlineInputBorder(),
-                      ),
-                    ),
-                    const SizedBox(height: 20),
-
-                    // Schedule Dropdown
-                    InputDecorator(
-                      decoration: const InputDecoration(
-                        labelText: 'Schedule',
-                        border: OutlineInputBorder(),
-                        contentPadding: EdgeInsets.symmetric(
-                          horizontal: 10,
-                          vertical: 0,
-                        ),
-                      ),
-                      child: DropdownButtonHideUnderline(
-                        child: DropdownButton<String>(
-                          value: selectedSchedule,
-                          isExpanded: true,
-                          items: scheduleOptions
-                              .map(
-                                (String value) => DropdownMenuItem<String>(
-                                  value: value,
-                                  child: Text(value),
-                                ),
-                              )
-                              .toList(),
-                          onChanged: (String? newValue) {
-                            if (newValue != null) {
-                              setModalState(() {
-                                selectedSchedule = newValue;
-                              });
-                            }
-                          },
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 20),
-
-                    // Date Picker
-                    Row(
-                      children: [
-                        Expanded(
-                          child: Text(
-                            'Start Date: ${selectedDate.day}/${selectedDate.month}/${selectedDate.year}',
-                            style: const TextStyle(fontSize: 16),
-                          ),
-                        ),
-                        ElevatedButton.icon(
-                          onPressed: () => selectDate(context, setModalState),
-                          icon: const Icon(Icons.calendar_today),
-                          label: const Text('Pick Date'),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 10),
-
-                    // Time Picker
-                    Row(
-                      children: [
-                        Expanded(
-                          child: Text(
-                            'Time: ${selectedTime.format(context)}',
-                            style: const TextStyle(fontSize: 16),
-                          ),
-                        ),
-                        ElevatedButton.icon(
-                          onPressed: () => selectTime(context, setModalState),
-                          icon: const Icon(Icons.access_time),
-                          label: const Text('Pick Time'),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 20),
-
-                    // Duration Slider
-                    Text(
-                      'Duration: ${durationInDays.toInt()} Days',
-                      style: const TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    Slider(
-                      value: durationInDays,
-                      min: 1,
-                      max: 90,
-                      divisions: 89,
-                      label: durationInDays.round().toString(),
-                      onChanged: (double value) {
-                        setModalState(() {
-                          durationInDays = value;
-                        });
-                      },
-                    ),
-                    const SizedBox(height: 30),
-
-                    // Save Button
-                    ElevatedButton(
-                      onPressed: () {
-                        if (nameController.text.isNotEmpty) {
-                          Navigator.of(ctx).pop();
-                          setState(() {
-                            _reminders.add(
-                              PillReminder(
-                                medicationName: nameController.text,
-                                schedule: selectedSchedule,
-                                time: selectedTime,
-                                startDate: selectedDate,
-                                repeatDays: 0,
-                                durationDays: durationInDays.toInt(),
-                              ),
-                            );
-                          });
-                        }
-                        nameController.dispose();
-                      },
-                      style: ElevatedButton.styleFrom(
-                        padding: const EdgeInsets.symmetric(vertical: 15),
-                      ),
-                      child: const Text('Save Reminder'),
-                    ),
-                  ],
-                ),
-              ),
-            );
-          },
-        );
+      builder: (_) {
+        return AddPillReminderModal(onReminderAdded: _addReminder);
       },
     );
   }
 
+  // --- Screen Builder ---
+
   @override
   Widget build(BuildContext context) {
-    final Color primary = Theme.of(context).primaryColor;
+    final primaryColor = Theme.of(context).primaryColor;
+
+    // Guest Mode UI Restriction Logic
+    if (widget.isGuest) {
+      return Scaffold(
+        appBar: AppBar(
+          title: const Text('Pill Reminders (Guest View)'),
+          backgroundColor: primaryColor,
+          foregroundColor: Colors.white,
+        ),
+        body: const Center(
+          child: Padding(
+            padding: EdgeInsets.all(32.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(Icons.lock_outline, size: 60, color: Colors.grey),
+                SizedBox(height: 20),
+                Text(
+                  'Access Limited',
+                  style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                ),
+                SizedBox(height: 10),
+                Text(
+                  'Please sign up or log in to add new reminders, monitor health, or manage care schedules.',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(fontSize: 16, color: Colors.black54),
+                ),
+              ],
+            ),
+          ),
+        ),
+      );
+    }
+
+    // Authenticated User UI
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.isGuest ? 'Pill Reminder (Guest)' : 'Pill Reminder'),
-        backgroundColor: primary,
+        title: const Text('Pill Reminders'),
+        backgroundColor: primaryColor,
         foregroundColor: Colors.white,
       ),
-      body: _reminders.isEmpty
-          ? Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(
-                    Icons.access_time_filled,
-                    size: 80,
-                    // If your SDK warns on withOpacity, switch to withValues
-                    // ignore: deprecated_member_use
-                    color: primary.withValues(alpha: 0.6),
-                  ),
-                  const SizedBox(height: 20),
-                  const Text(
-                    "Start to add your reminder",
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.w500,
-                      color: Colors.black54,
-                    ),
-                  ),
-                  const SizedBox(height: 8),
-                  const Text(
-                    "Tap the '+' button to set your first medication schedule.",
-                    textAlign: TextAlign.center,
-                    style: TextStyle(fontSize: 16, color: Colors.black45),
-                  ),
-                ],
-              ),
-            )
-          : ListView.builder(
-              itemCount: _reminders.length,
-              itemBuilder: (context, index) {
-                final reminder = _reminders[index];
-                return Padding(
-                  padding: const EdgeInsets.only(top: 8, left: 16, right: 16),
-                  child: ReminderCard(
-                    reminder: reminder,
-                    onTaken: _markAsTaken,
-                    onSkip: _skipReminder,
-                    onReschedule: _rescheduleReminder,
-                  ),
-                );
-              },
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'Reminders Due Today',
+              style: Theme.of(context).textTheme.headlineSmall,
             ),
+            const SizedBox(height: 15),
+            _reminders.isEmpty
+                ? const Center(
+                    child: Padding(
+                      padding: EdgeInsets.only(top: 50.0),
+                      child: Text(
+                        'No reminders set. Tap the "+" to add one!',
+                        style: TextStyle(fontSize: 16, color: Colors.grey),
+                      ),
+                    ),
+                  )
+                : ListView.builder(
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    itemCount: _reminders.length,
+                    itemBuilder: (context, index) {
+                      final reminder = _reminders[index];
+                      return Padding(
+                        padding: const EdgeInsets.only(bottom: 12.0),
+                        child: PillReminderCard(
+                          reminder: reminder,
+                          onTaken: _markAsTaken,
+                          onSkip: _skipReminder,
+                          onReschedule: _rescheduleReminder,
+                        ),
+                      );
+                    },
+                  ),
+          ],
+        ),
+      ),
+      // NEW: Floating Action Button for adding new reminders
       floatingActionButton: FloatingActionButton(
-        onPressed: _showAddReminderSheet,
-        backgroundColor: primary,
-        child: const Icon(Icons.add, color: Colors.white),
+        onPressed: () => _showAddReminderModal(context),
+        backgroundColor: primaryColor,
+        foregroundColor: Colors.white,
+        child: const Icon(Icons.add),
       ),
     );
   }
 }
 
-// --- Widget to display a single reminder ---
-class ReminderCard extends StatelessWidget {
+// --- Pill Reminder Card Widget ---
+class PillReminderCard extends StatelessWidget {
   final PillReminder reminder;
   final Function(PillReminder) onTaken;
   final Function(PillReminder) onSkip;
   final Function(PillReminder) onReschedule;
 
-  const ReminderCard({
+  const PillReminderCard({
     super.key,
     required this.reminder,
     required this.onTaken,
@@ -341,37 +237,56 @@ class ReminderCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final Color primary = Theme.of(context).primaryColor;
+    final primary = Theme.of(context).primaryColor;
+
     return Card(
       elevation: 4,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(12),
+        side: BorderSide(color: primary.withOpacity(0.2)),
+      ),
       child: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Medication Name and Time
+            // Time and Name Header
             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(
-                  reminder.medicationName,
-                  style: const TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.teal,
+                Icon(Icons.access_time, color: primary, size: 28),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Text(
+                    reminder.medicationName,
+                    style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                      fontWeight: FontWeight.bold,
+                      color: primary,
+                    ),
+                    overflow: TextOverflow.ellipsis,
                   ),
                 ),
-                Text(
-                  reminder.time.format(context),
-                  style: const TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
+                Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 10,
+                    vertical: 5,
+                  ),
+                  decoration: BoxDecoration(
+                    color: primary.withOpacity(0.1),
+                    borderRadius: BorderRadius.circular(6),
+                  ),
+                  child: Text(
+                    reminder.time.format(context),
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: primary,
+                      fontSize: 16,
+                    ),
                   ),
                 ),
               ],
             ),
-            const SizedBox(height: 8),
+
+            const SizedBox(height: 10),
 
             // Schedule, Duration, etc.
             Text(

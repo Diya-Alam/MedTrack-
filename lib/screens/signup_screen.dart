@@ -1,3 +1,5 @@
+// lib/screens/signup_screen.dart
+
 import 'package:flutter/material.dart';
 import 'package:medtrack_app/routes.dart';
 
@@ -43,26 +45,23 @@ class _SignupScreenState extends State<SignupScreen> {
       // In a real application, this is where you'd handle the Firebase response.
 
       if (!mounted) return;
-
       setState(() {
         _isLoading = false; // Stop loading
       });
 
-      // Show success feedback
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Account created successfully! Redirecting...'),
-          backgroundColor: Colors.green,
-          duration: Duration(seconds: 3),
-        ),
-      );
-
-      // Navigate to the main application after feedback
-      // Use pushReplacementNamed so the user can't hit 'back' to the signup screen
-      await Future.delayed(const Duration(milliseconds: 500));
-      if (!mounted) return;
+      // Navigate to the full, authenticated app experience
       Navigator.of(context).pushReplacementNamed(AppRoutes.pillReminder);
     }
+  }
+
+  // NEW: Placeholder function for social sign up logic
+  void _handleSocialSignup(BuildContext context, String provider) {
+    // In a real application, this would call a social sign-in/up method
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('Simulating sign up with $provider...')),
+    );
+    // Simulate successful navigation
+    Navigator.of(context).pushReplacementNamed(AppRoutes.pillReminder);
   }
 
   @override
@@ -90,24 +89,18 @@ class _SignupScreenState extends State<SignupScreen> {
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
                     Text(
-                      'Get Started Today',
-                      style: Theme.of(context).textTheme.headlineLarge
-                          ?.copyWith(
-                            fontWeight: FontWeight.bold,
-                            color: Theme.of(context).primaryColorDark,
-                          ),
-                      textAlign: TextAlign.center,
+                      'Join MediTrack+',
+                      style: Theme.of(context).textTheme.headlineMedium
+                          ?.copyWith(fontWeight: FontWeight.bold),
                     ),
-                    const SizedBox(height: 20),
+                    const SizedBox(height: 25),
 
-                    // Full Name Field (now uses controller)
+                    // Name Input
                     TextFormField(
                       controller: _nameController,
                       decoration: const InputDecoration(
                         labelText: 'Full Name',
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(8)),
-                        ),
+                        border: OutlineInputBorder(),
                         prefixIcon: Icon(Icons.person),
                       ),
                       validator: (value) {
@@ -119,38 +112,35 @@ class _SignupScreenState extends State<SignupScreen> {
                     ),
                     const SizedBox(height: 15),
 
-                    // Email Field (now uses controller)
+                    // Email Input
                     TextFormField(
                       controller: _emailController,
+                      keyboardType: TextInputType.emailAddress,
                       decoration: const InputDecoration(
                         labelText: 'Email',
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(8)),
-                        ),
+                        border: OutlineInputBorder(),
                         prefixIcon: Icon(Icons.email),
                       ),
-                      keyboardType: TextInputType.emailAddress,
                       validator: (value) {
-                        if (value == null ||
-                            value.isEmpty ||
-                            !value.contains('@') ||
-                            !value.contains('.')) {
-                          return 'Please enter a valid email';
+                        if (value == null || value.isEmpty) {
+                          return 'Please enter your email';
+                        }
+                        // Basic email format check
+                        if (!RegExp(r'^[^@]+@[^@]+\.[^@]+').hasMatch(value)) {
+                          return 'Please enter a valid email address';
                         }
                         return null;
                       },
                     ),
                     const SizedBox(height: 15),
 
-                    // Password Field
+                    // Password Input
                     TextFormField(
                       controller: _passwordController,
                       obscureText: true,
                       decoration: const InputDecoration(
                         labelText: 'Password',
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(8)),
-                        ),
+                        border: OutlineInputBorder(),
                         prefixIcon: Icon(Icons.lock),
                       ),
                       validator: (value) {
@@ -162,31 +152,25 @@ class _SignupScreenState extends State<SignupScreen> {
                     ),
                     const SizedBox(height: 15),
 
-                    // Confirm Password Field (validation ensures match)
+                    // Confirm Password Input
                     TextFormField(
                       controller: _confirmPasswordController,
                       obscureText: true,
                       decoration: const InputDecoration(
                         labelText: 'Confirm Password',
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(8)),
-                        ),
+                        border: OutlineInputBorder(),
                         prefixIcon: Icon(Icons.lock_reset),
                       ),
                       validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Please confirm your password';
-                        }
                         if (value != _passwordController.text) {
                           return 'Passwords do not match';
                         }
                         return null;
                       },
                     ),
-
                     const SizedBox(height: 30),
 
-                    // Sign Up Button with Loading Indicator
+                    // Standard Sign Up Button
                     ElevatedButton(
                       onPressed: _isLoading
                           ? null
@@ -213,6 +197,47 @@ class _SignupScreenState extends State<SignupScreen> {
                               style: TextStyle(fontSize: 18),
                             ),
                     ),
+
+                    // NEW: Divider for Social Sign Up
+                    const SizedBox(height: 30),
+                    Row(
+                      children: [
+                        const Expanded(child: Divider()),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                          child: Text(
+                            'OR',
+                            style: TextStyle(color: Colors.grey[600]),
+                          ),
+                        ),
+                        const Expanded(child: Divider()),
+                      ],
+                    ),
+                    const SizedBox(height: 30),
+
+                    // NEW: Social Sign Up Button (Simulated Google Sign-up)
+                    OutlinedButton.icon(
+                      onPressed: _isLoading
+                          ? null
+                          : () => _handleSocialSignup(context, 'Google'),
+                      icon: const Icon(
+                        Icons.g_mobiledata,
+                        size: 30,
+                      ), // Placeholder icon
+                      label: const Text('Sign up with Google'),
+                      style: OutlinedButton.styleFrom(
+                        padding: const EdgeInsets.symmetric(vertical: 15),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        side: BorderSide(
+                          color: Colors.grey.shade300,
+                          width: 1.5,
+                        ),
+                      ),
+                    ),
+
+                    // End of New Section
                     const SizedBox(height: 20),
 
                     // Link to Login Screen

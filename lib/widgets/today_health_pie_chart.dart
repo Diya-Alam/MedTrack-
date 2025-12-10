@@ -68,7 +68,7 @@ class TodayHealthPieChart extends StatelessWidget {
                       ),
                       child: Center(
                         child: Text(
-                          '${totalRecords}\nLogs',
+                          '$totalRecords\nLogs',
                           textAlign: TextAlign.center,
                           style: TextStyle(
                             fontSize: 14,

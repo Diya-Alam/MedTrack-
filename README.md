@@ -60,13 +60,9 @@ Motivational character with speech bubble.
 
 Countdown timer with +1 min delay option.
 
-6. Daily & Monthly Health Report
-
-Weight stats: Latest, Average, Min, Max.
-
 Interactive line graph with data points.
 
-7. Records, Pet & Child Care, Complex Scheduling
+6. Records, Pet & Child Care, Complex Scheduling
 
 Calendar view with adherence color codes.
 
@@ -97,7 +93,6 @@ MediTrackPlus/
 │ ├── PillReminderScreen.dart
 │ ├── HealthMonitorScreen.dart
 │ ├── TimerScreen.dart
-│ ├── ReportScreen.dart
 │ └── SchedulingScreen.dart
 ├── models/
 ├── utils/
