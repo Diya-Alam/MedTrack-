@@ -1,39 +1,39 @@
 import 'package:flutter/material.dart';
-// Note: Changed the import to match the standard name 'reminder_screen.dart'
-// used in previous steps. If your file is named 'pill_reminder_screen.dart',
-// this will need manual correction on your end to 'ReminderScreen()'.
+
+// Import the core feature screens
+import '../screens/health_monitor_screen.dart';
 import 'package:medtrack_app/screens/pill_reminder_screen.dart';
+// 1. ADD IMPORT: Import the Timer Screen
 import 'package:medtrack_app/screens/timer_screen.dart';
 
-// This screen acts as the main hub post-login, featuring a Bottom Navigation Bar.
-class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key});
+class MainAppShell extends StatefulWidget {
+  final bool isGuest;
+
+  // The isGuest status is passed down from the route call
+  const MainAppShell({super.key, required this.isGuest});
 
   @override
-  State<HomeScreen> createState() => _HomeScreenState();
+  State<MainAppShell> createState() => _MainAppShellState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
-  int _selectedIndex = 0;
+class _MainAppShellState extends State<MainAppShell> {
+  int _selectedIndex =
+      0; // Current selected tab index (0 = Pill Reminder, 1 = Health Monitor)
 
-  // List of screens to be displayed in the body of the Scaffold
-  final List<Widget> _screens = [
-    // 0. Reminder Screen (Feature 3) - FIX: Pass required parameter 'isGuest: false'
-    const PillReminderScreen(isGuest: false),
+  // List of screens available in the Bottom Navigation Bar
+  late final List<Widget> _widgetOptions;
 
-    // 1. Placeholder for Health Monitor (Feature 4)
-    const Center(
-      child: Text('Health Monitor (Feature 4)', style: TextStyle(fontSize: 20)),
-    ),
-
-    // 2. Anti-Procrastination Timer (Feature 5)
-    const TimerScreen(),
-
-    // 3. Placeholder for Reports/Profile (Features 6 & 7)
-    const Center(
-      child: Text('Reports & Profile', style: TextStyle(fontSize: 20)),
-    ),
-  ];
+  @override
+  void initState() {
+    super.initState();
+    // 2. UPDATE SCREEN LIST: Replace the placeholder with the actual TimerScreen
+    _widgetOptions = <Widget>[
+      PillReminderScreen(isGuest: widget.isGuest), // Index 0: Reminders
+      const HealthMonitorScreen(), // Index 1: Monitor
+      const TimerScreen(), // Index 2: Focus Timer
+      // The 'Reports' placeholder screen has been removed entirely.
+    ];
+  }
 
   void _onItemTapped(int index) {
     setState(() {
@@ -43,38 +43,32 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final primaryColor = Theme.of(context).primaryColor;
-
     return Scaffold(
-      // The body displays the selected screen from the list above
-      body: _screens[_selectedIndex],
+      // Display the screen corresponding to the selected index
+      body: _widgetOptions.elementAt(_selectedIndex),
 
-      // --- Bottom Navigation Bar Implementation ---
+      // Bottom Navigation Bar
       bottomNavigationBar: BottomNavigationBar(
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
-            icon: Icon(Icons.schedule_outlined),
+            icon: Icon(Icons.access_time_filled),
             label: 'Reminders',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.monitor_heart_outlined),
+            icon: Icon(Icons.monitor_heart),
             label: 'Monitor',
           ),
-          // Timer Icon
+          // 3. UPDATE NAV ITEM: Change the 'Reports' tab to 'Focus Timer'
           BottomNavigationBarItem(
-            icon: Icon(Icons.timer_outlined),
-            label: 'Focus Timer',
+            icon: Icon(Icons.timer_outlined), // Timer Icon
+            label: 'Focus Timer', // Correct Label
           ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.assessment_outlined),
-            label: 'Reports',
-          ),
+          // The 'Reports' navigation item has been removed entirely.
         ],
         currentIndex: _selectedIndex,
-        selectedItemColor: primaryColor,
+        selectedItemColor: Theme.of(context).primaryColor,
         unselectedItemColor: Colors.grey,
         onTap: _onItemTapped,
-        type: BottomNavigationBarType.fixed, // Use fixed type for 4 items
       ),
     );
   }
