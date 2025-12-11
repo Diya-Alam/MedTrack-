@@ -34,6 +34,44 @@ class SettingsDetailScreen extends StatelessWidget {
 class AppearanceScreen extends StatelessWidget {
   const AppearanceScreen({super.key});
 
+  Widget _buildColorOption(
+    BuildContext context,
+    SettingsStateModel settings,
+    Color color,
+    String name,
+  ) {
+    bool isSelected = settings.backgroundColor == color;
+    return GestureDetector(
+      onTap: () => settings.setBackgroundColor(color),
+      child: Column(
+        children: [
+          Container(
+            width: 40,
+            height: 40,
+            decoration: BoxDecoration(
+              color: color,
+              shape: BoxShape.circle,
+              border: Border.all(
+                color: isSelected
+                    ? Theme.of(context).primaryColor
+                    : Colors.grey,
+                width: isSelected ? 3 : 1,
+              ),
+            ),
+          ),
+          const SizedBox(height: 4),
+          Text(
+            name,
+            style: TextStyle(
+              fontSize: 12,
+              color: isSelected ? Theme.of(context).primaryColor : Colors.black,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Consumer<SettingsStateModel>(
@@ -86,20 +124,31 @@ class AppearanceScreen extends StatelessWidget {
             // Background Color Picker (Simplified Preset Selection)
             const ListTile(
               title: Text('Background Color'),
-              subtitle: Text('Choose from presets or a custom color'),
+              subtitle: Text('Choose from presets'),
             ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                _buildColorOption(context, settings, Colors.white, 'Default'),
-                _buildColorOption(context, settings, Colors.blue[50]!, 'Sky'),
-                _buildColorOption(
-                  context,
-                  settings,
-                  Colors.grey[200]!,
-                  'Light',
-                ),
-              ],
+            Padding(
+              padding: const EdgeInsets.symmetric(
+                horizontal: 16.0,
+                vertical: 8.0,
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  _buildColorOption(context, settings, Colors.white, 'Default'),
+                  _buildColorOption(
+                    context,
+                    settings,
+                    const Color(0xFFF0F8FF),
+                    'Sky',
+                  ),
+                  _buildColorOption(
+                    context,
+                    settings,
+                    Colors.grey[200]!,
+                    'Light',
+                  ),
+                ],
+              ),
             ),
 
             // Layout Density (Placeholder)
@@ -115,44 +164,6 @@ class AppearanceScreen extends StatelessWidget {
           ],
         );
       },
-    );
-  }
-
-  Widget _buildColorOption(
-    BuildContext context,
-    SettingsStateModel settings,
-    Color color,
-    String name,
-  ) {
-    bool isSelected = settings.backgroundColor == color;
-    return GestureDetector(
-      onTap: () => settings.setBackgroundColor(color),
-      child: Column(
-        children: [
-          Container(
-            width: 40,
-            height: 40,
-            decoration: BoxDecoration(
-              color: color,
-              shape: BoxShape.circle,
-              border: Border.all(
-                color: isSelected
-                    ? Theme.of(context).primaryColor
-                    : Colors.grey,
-                width: isSelected ? 3 : 1,
-              ),
-            ),
-          ),
-          const SizedBox(height: 4),
-          Text(
-            name,
-            style: TextStyle(
-              fontSize: 12,
-              color: isSelected ? Theme.of(context).primaryColor : Colors.black,
-            ),
-          ),
-        ],
-      ),
     );
   }
 }
@@ -235,7 +246,7 @@ class DateTimeScreen extends StatelessWidget {
 }
 
 // ===================================
-// 3. Simple Placeholders for Other Screens
+// 3. Simple Placeholders for Other Screens (REQUIRED BY settings_screen.dart)
 // ===================================
 
 class PlaceholderScreen extends StatelessWidget {

@@ -1,18 +1,19 @@
-import 'package:flutter/material.dart'
-    show
-        BuildContext,
-        MaterialApp,
-        StatelessWidget,
-        Widget,
-        runApp,
-        ThemeData,
-        Colors;
+// lib/main.dart (FINAL CLEAN CODE)
 
-// Importing the AppRoutes definition
+import 'package:flutter/material.dart'; // ✅ FIX: Use the full import to prevent naming conflicts
+import 'package:provider/provider.dart';
 import 'package:medtrack_app/routes.dart';
 
+// Import the Settings Model
+import 'models/settings_state_model.dart';
+
 void main() {
-  runApp(const MyApp());
+  runApp(
+    ChangeNotifierProvider(
+      create: (context) => SettingsStateModel(),
+      child: const MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -20,16 +21,41 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'MedTrack+',
-      theme: ThemeData(primarySwatch: Colors.blue, useMaterial3: true),
+    // Consume the settings state here to apply theme and font size changes
+    return Consumer<SettingsStateModel>(
+      builder: (context, settings, child) {
+        return MaterialApp(
+          debugShowCheckedModeBanner: false,
+          title: 'MedTrack+',
 
-      // THIS MUST BE SET TO THE WELCOME ROUTE:
-      initialRoute: AppRoutes.welcome,
+          // Apply theme mode from settings
+          themeMode: settings.themeMode,
 
-      // Link the external routes map
-      routes: AppRoutes.routes,
+          // Define Light Theme
+          theme: ThemeData(
+            primarySwatch: Colors.blue,
+            useMaterial3: true,
+            // Apply font size scaling from the settings model
+            // NOTE: Theme.of(context) must be inside the builder/Consumer
+            textTheme: Theme.of(
+              context,
+            ).textTheme.apply(fontSizeFactor: settings.fontSizeScale),
+          ),
+
+          // Define Dark Theme
+          darkTheme: ThemeData.dark().copyWith(
+            primaryColor: Colors.blue,
+            useMaterial3: true,
+            // Apply font size scaling from the settings model
+            textTheme: Theme.of(
+              context,
+            ).textTheme.apply(fontSizeFactor: settings.fontSizeScale),
+          ),
+
+          initialRoute: AppRoutes.welcome,
+          routes: AppRoutes.routes,
+        );
+      },
     );
   }
 }

@@ -1,4 +1,4 @@
-// lib/routes.dart (MODIFIED)
+// lib/routes.dart (FINAL FIXED VERSION)
 
 import 'package:flutter/material.dart';
 
@@ -10,8 +10,7 @@ import 'screens/signup_screen.dart';
 import 'screens/health_monitor_screen.dart';
 import 'screens/timer_screen.dart';
 import 'screens/scheduling_screen.dart';
-// NEW IMPORT: Settings Screen
-import 'screens/settings_screen.dart';
+import 'screens/settings_screen.dart'; // REQUIRED: New Settings Import
 
 class AppRoutes {
   // --- Route Name Constants ---
@@ -27,8 +26,7 @@ class AppRoutes {
   static const String healthMonitor = '/health_monitor';
   static const String focusTimer = '/focus_timer';
   static const String scheduling = '/scheduling';
-
-  static const String settings = '/settings'; // NEW ROUTE CONSTANT
+  static const String settings = '/settings'; // REQUIRED: New Settings Route
 
   // --- Centralized Route Map ---
   static Map<String, WidgetBuilder> get routes => {
@@ -41,7 +39,8 @@ class AppRoutes {
     healthMonitor: (context) => const HealthMonitorScreen(),
     focusTimer: (context) => const TimerScreen(),
     scheduling: (context) => const SchedulingScreen(),
-    settings: (context) => const SettingsScreen(), // NEW ROUTE MAPPING
+    settings: (context) =>
+        const SettingsScreen(), // REQUIRED: New Settings Mapping
     // Main Shell Wrappers (Home)
     pillReminder: (context) => const MainAppShell(isGuest: false),
     guestMode: (context) => const MainAppShell(isGuest: true),
