@@ -1,18 +1,18 @@
-// lib/widgets/main_app_shell.dart (MODIFIED)
+// lib/widgets/main_app_shell.dart (MODIFIED TO PROVIDE FocusTimerStateModel)
 
 import 'package:flutter/material.dart';
-
+import 'package:provider/provider.dart'; // REQUIRED for the new model
 // Import the core feature screens
 import '../screens/health_monitor_screen.dart';
 import 'package:medtrack_app/screens/pill_reminder_screen.dart';
 import 'package:medtrack_app/screens/timer_screen.dart';
 import 'package:medtrack_app/screens/scheduling_screen.dart';
-// 1. NEW IMPORT: Settings Screen
 import '../screens/settings_screen.dart';
+import '../models/focus_timer_state_model.dart'; // REQUIRED new model
 
 class MainAppShell extends StatefulWidget {
+  // ... (rest of the class remains the same)
   final bool isGuest;
-
   const MainAppShell({super.key, required this.isGuest});
 
   @override
@@ -20,21 +20,25 @@ class MainAppShell extends StatefulWidget {
 }
 
 class _MainAppShellState extends State<MainAppShell> {
-  // Now 5 indices: 0, 1, 2, 3, 4
   int _selectedIndex = 0;
-
   late final List<Widget> _widgetOptions;
 
   @override
   void initState() {
     super.initState();
-    // 2. ADD SettingsScreen to the list of major screens
+
+    // 💥 FIX: Wrap TimerScreen with its dedicated provider
     _widgetOptions = <Widget>[
       PillReminderScreen(isGuest: widget.isGuest), // Index 0: Reminders
       const HealthMonitorScreen(), // Index 1: Monitor
-      const TimerScreen(), // Index 2: Focus Timer
+      // Index 2: Focus Timer (Wrapped with its own state model)
+      ChangeNotifierProvider(
+        create: (context) => FocusTimerStateModel(),
+        child: const TimerScreen(),
+      ),
+
       const SchedulingScreen(), // Index 3: Care/Sched
-      const SettingsScreen(), // Index 4: Settings (NEW)
+      const SettingsScreen(), // Index 4: Settings
     ];
   }
 
@@ -46,6 +50,7 @@ class _MainAppShellState extends State<MainAppShell> {
 
   @override
   Widget build(BuildContext context) {
+    // ... (rest of the build method is unchanged)
     return Scaffold(
       // Display the screen corresponding to the selected index
       body: _widgetOptions.elementAt(_selectedIndex),
