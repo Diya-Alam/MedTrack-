@@ -7,7 +7,6 @@ import '../models/focus_timer_state_model.dart';
 
 // -----------------------------------------------------------------
 // HELPER METHOD: Goal Setter Dialog
-// Defined outside the StatelessWidget to keep the build method clean
 // -----------------------------------------------------------------
 
 Future<void> _showGoalSetterDialog(
@@ -64,20 +63,21 @@ Future<void> _showGoalSetterDialog(
 }
 
 // -----------------------------------------------------------------
-// 1. WIDGET: Custom Painter for the Circular Progress Arc
+// 1. WIDGET: Custom Painter for the Circular Progress Arc (FIXED)
 // -----------------------------------------------------------------
 
 class _ProgressCirclePainter extends CustomPainter {
   final double progress;
   final Color baseColor;
   final Color progressColor;
-  final double strokeWidth;
+  final double strokeWidth; // Final variable
 
   _ProgressCirclePainter({
     required this.progress,
     required this.baseColor,
     required this.progressColor,
-    this.strokeWidth = 15.0,
+    this.strokeWidth =
+        15.0, // FIX: Initialized the final variable with a default value
   });
 
   @override
@@ -88,7 +88,7 @@ class _ProgressCirclePainter extends CustomPainter {
     final basePaint = Paint()
       ..color = baseColor
       ..style = PaintingStyle.stroke
-      ..strokeWidth = strokeWidth;
+      ..strokeWidth = strokeWidth; // Uses the now initialized strokeWidth
 
     canvas.drawCircle(center, radius, basePaint);
 
@@ -152,6 +152,7 @@ class _ProgressCircleTimer extends StatelessWidget {
             // 1. CustomPainter draws the circle and arc
             CustomPaint(
               size: const Size.square(250),
+              // The constructor call here is now valid
               painter: _ProgressCirclePainter(
                 progress: progress,
                 baseColor: primaryColor.withOpacity(0.2),
@@ -318,7 +319,7 @@ class TimerScreen extends StatelessWidget {
 
         return Scaffold(
           appBar: AppBar(
-            title: Text('${timerModel.phaseTitle}'),
+            title: Text(timerModel.phaseTitle),
             backgroundColor: primaryColor,
             foregroundColor: Colors.white,
             actions: [

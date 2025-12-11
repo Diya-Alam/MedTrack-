@@ -271,52 +271,48 @@ class _SchedulingScreenState extends State<SchedulingScreen> {
                 ),
               )
             else
-              ..._getActiveDependentSchedules()
-                  .map(
-                    (schedule) => Padding(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 16.0,
-                        vertical: 4.0,
-                      ),
-                      child: Card(
-                        elevation: 1,
-                        child: ListTile(
-                          leading: CircleAvatar(
-                            backgroundColor: _activeDependent.color.withOpacity(
-                              0.1,
-                            ),
-                            child: Icon(
-                              Icons.access_alarm,
-                              color: _activeDependent.color,
-                            ),
-                          ),
-                          title: Text(
-                            schedule.taskName,
-                            style: const TextStyle(fontWeight: FontWeight.bold),
-                          ),
-                          subtitle: Text(
-                            'Starts at ${DateFormat('hh:mm a').format(schedule.startTime)} | Duration: ${schedule.durationDays} days',
-                          ),
-                          // NOTE: The extension for frequency.name is defined in add_schedule_modal.dart.
-                          trailing: Text(
-                            schedule.frequency.index == 0
-                                ? 'Daily'
-                                : 'Interval',
-                          ),
-                          // Add action to view/edit
-                          onTap: () {
-                            // Placeholder for an edit/detail view
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                content: Text('Tapped on ${schedule.taskName}'),
-                              ),
-                            );
-                          },
+              ..._getActiveDependentSchedules().map(
+                (schedule) => Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 16.0,
+                    vertical: 4.0,
+                  ),
+                  child: Card(
+                    elevation: 1,
+                    child: ListTile(
+                      leading: CircleAvatar(
+                        backgroundColor: _activeDependent.color.withOpacity(
+                          0.1,
+                        ),
+                        child: Icon(
+                          Icons.access_alarm,
+                          color: _activeDependent.color,
                         ),
                       ),
+                      title: Text(
+                        schedule.taskName,
+                        style: const TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                      subtitle: Text(
+                        'Starts at ${DateFormat('hh:mm a').format(schedule.startTime)} | Duration: ${schedule.durationDays} days',
+                      ),
+                      // NOTE: The extension for frequency.name is defined in add_schedule_modal.dart.
+                      trailing: Text(
+                        schedule.frequency.index == 0 ? 'Daily' : 'Interval',
+                      ),
+                      // Add action to view/edit
+                      onTap: () {
+                        // Placeholder for an edit/detail view
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text('Tapped on ${schedule.taskName}'),
+                          ),
+                        );
+                      },
                     ),
-                  )
-                  .toList(),
+                  ),
+                ),
+              ),
             const SizedBox(height: 40),
           ],
         ),

@@ -462,7 +462,7 @@ class _PillReminderScreenState extends State<PillReminderScreen> {
                       leading: const Icon(Icons.medical_services_outlined),
                       title: const Text('Dosage (Pills/Dose)'),
                       subtitle: Text(
-                        '${selectedDosage} pill${selectedDosage > 1 ? 's' : ''}',
+                        '$selectedDosage pill${selectedDosage > 1 ? 's' : ''}',
                         style: const TextStyle(fontWeight: FontWeight.bold),
                       ),
                       trailing: const Icon(Icons.edit),
@@ -482,7 +482,7 @@ class _PillReminderScreenState extends State<PillReminderScreen> {
                                       return Column(
                                         mainAxisSize: MainAxisSize.min,
                                         children: <Widget>[
-                                          Text('Pills/Dose: ${tempDosage}'),
+                                          Text('Pills/Dose: $tempDosage'),
                                           Slider(
                                             value: tempDosage.toDouble(),
                                             min: 1,

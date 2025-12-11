@@ -162,7 +162,7 @@ class _AddScheduleModalState extends State<AddScheduleModal> {
 
               // --- 3. Schedule Frequency Dropdown ---
               DropdownButtonFormField<ScheduleFrequency>(
-                value: _selectedFrequency,
+                initialValue: _selectedFrequency,
                 decoration: const InputDecoration(
                   labelText: 'Frequency',
                   prefixIcon: Icon(Icons.repeat),

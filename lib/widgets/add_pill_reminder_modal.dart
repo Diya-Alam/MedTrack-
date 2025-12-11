@@ -164,7 +164,7 @@ class _AddPillReminderModalState extends State<AddPillReminderModal> {
 
               // --- 4. Schedule/Frequency Dropdown ---
               DropdownButtonFormField<String>(
-                value: _selectedSchedule,
+                initialValue: _selectedSchedule,
                 decoration: const InputDecoration(
                   labelText: 'Frequency',
                   border: OutlineInputBorder(),

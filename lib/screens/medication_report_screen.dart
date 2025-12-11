@@ -200,7 +200,9 @@ class _MedicationReportScreenState extends State<MedicationReportScreen> {
     }
 
     if (logsByMedication.isEmpty) {
-      return Center(child: Text('No adherence records found for this period.'));
+      return const Center(
+        child: Text('No adherence records found for this period.'),
+      );
     }
 
     // Generate a summary for the current report view

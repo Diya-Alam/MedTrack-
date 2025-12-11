@@ -8,12 +8,14 @@ enum TimerPhase { focus, shortBreak, longBreak, idle }
 
 class FocusTimerStateModel with ChangeNotifier {
   // --- Configuration (Can be customized by the user later) ---
-  Duration _workDuration = const Duration(minutes: 25);
-  Duration _shortBreakDuration = const Duration(minutes: 5);
-  Duration _longBreakDuration = const Duration(minutes: 15);
+  final Duration _workDuration = const Duration(minutes: 25);
+  final Duration _shortBreakDuration = const Duration(minutes: 5);
+  final Duration _longBreakDuration = const Duration(minutes: 15);
   final int _cyclesBeforeLongBreak = 4;
   // ADD THIS PRIVATE VARIABLE:
-  Duration _currentPhaseDuration = const Duration(minutes: 25); // Default value
+  final Duration _currentPhaseDuration = const Duration(
+    minutes: 25,
+  ); // Default value
   // ADD THIS PUBLIC GETTER: (This is what TimerScreen is looking for)
   Duration get currentPhaseDuration => _currentPhaseDuration;
 

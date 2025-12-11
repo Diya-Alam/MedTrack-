@@ -45,7 +45,6 @@ class MyApp extends StatelessWidget {
           // Define Dark Theme
           darkTheme: ThemeData.dark().copyWith(
             primaryColor: Colors.blue,
-            useMaterial3: true,
             // Apply font size scaling from the settings model
             textTheme: Theme.of(
               context,

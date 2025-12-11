@@ -271,20 +271,18 @@ class PlaceholderScreen extends StatelessWidget {
             style: const TextStyle(fontStyle: FontStyle.italic),
           ),
         ),
-        ...features
-            .map(
-              (feature) => ListTile(
-                title: Text(feature),
-                onTap: () => ScaffoldMessenger.of(
-                  context,
-                ).showSnackBar(SnackBar(content: Text('Feature: $feature'))),
-                trailing: const Icon(
-                  Icons.check_circle_outline,
-                  color: Colors.green,
-                ),
-              ),
-            )
-            .toList(),
+        ...features.map(
+          (feature) => ListTile(
+            title: Text(feature),
+            onTap: () => ScaffoldMessenger.of(
+              context,
+            ).showSnackBar(SnackBar(content: Text('Feature: $feature'))),
+            trailing: const Icon(
+              Icons.check_circle_outline,
+              color: Colors.green,
+            ),
+          ),
+        ),
       ],
     );
   }
